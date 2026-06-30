@@ -1,0 +1,133 @@
+/* Sybase ASE Unlock Portal — design tokens & component styles */
+
+:root {
+  --sup-navy: #10243e;
+  --sup-navy-deep: #0a1828;
+  --sup-accent: #2f7d6e;       /* steel-teal accent, evokes terminal/db tooling */
+  --sup-accent-bright: #3fae99;
+  --sup-bg: #f3f5f7;
+  --sup-card-bg: #ffffff;
+  --sup-border: #e1e6eb;
+  --sup-text-muted: #5b6b7a;
+}
+
+[data-bs-theme="dark"] {
+  --sup-bg: #0d1620;
+  --sup-card-bg: #142231;
+  --sup-border: #243446;
+  --sup-text-muted: #93a3b3;
+}
+
+body {
+  background-color: var(--sup-bg);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  transition: background-color 0.2s ease;
+}
+
+/* --- Navbar --- */
+.sup-navbar {
+  background: linear-gradient(135deg, var(--sup-navy) 0%, var(--sup-navy-deep) 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.sup-brand {
+  color: #fff !important;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+.sup-navbar .nav-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+.sup-navbar .nav-link:hover {
+  color: #fff !important;
+}
+.sup-btn-ghost {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  background: transparent;
+}
+.sup-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* --- Buttons --- */
+.sup-btn-primary {
+  background-color: var(--sup-accent);
+  border-color: var(--sup-accent);
+  color: #fff;
+  font-weight: 500;
+}
+.sup-btn-primary:hover {
+  background-color: var(--sup-accent-bright);
+  border-color: var(--sup-accent-bright);
+  color: #fff;
+}
+main .sup-btn-ghost {
+  border: 1px solid var(--sup-border);
+  color: inherit;
+}
+
+/* --- Cards --- */
+.sup-card {
+  background-color: var(--sup-card-bg);
+  border: 1px solid var(--sup-border);
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.sup-card-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--sup-border);
+  font-weight: 600;
+  padding: 0.9rem 1.1rem;
+}
+
+.sup-badge-online {
+  background-color: rgba(63, 174, 153, 0.15);
+  color: var(--sup-accent);
+  font-weight: 500;
+}
+
+/* --- Login page --- */
+.sup-login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+.sup-login-panel {
+  display: flex;
+  width: 100%;
+  max-width: 880px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+}
+.sup-login-side {
+  flex: 1 1 40%;
+  background: linear-gradient(160deg, var(--sup-navy) 0%, var(--sup-navy-deep) 100%);
+  color: #fff;
+  padding: 3rem 2.5rem;
+  align-items: center;
+}
+.sup-login-glyph {
+  font-size: 2.5rem;
+  color: var(--sup-accent-bright);
+}
+.sup-login-form {
+  flex: 1 1 60%;
+  background-color: var(--sup-card-bg);
+  padding: 3rem 2.75rem;
+}
+
+/* --- Tables --- */
+.table {
+  --bs-table-color: inherit;
+}
+.table > :not(caption) > * > * {
+  border-bottom-color: var(--sup-border);
+}
+
+@media (max-width: 991px) {
+  .sup-login-panel { max-width: 420px; }
+}
