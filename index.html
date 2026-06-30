@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Sybase ASE Unlock Portal{% endblock %}
+{% block content %}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+  <div>
+    <h3 class="fw-semibold mb-1">Welcome, {{ user.display_name }}</h3>
+    <p class="text-muted mb-0">Here's what's happening across your Sybase ASE environment.</p>
+  </div>
+  <div class="text-end">
+    <div class="small text-muted">Server time</div>
+    <div class="fw-semibold" id="currentTime"></div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-sm-6">
+    <div class="card sup-card h-100">
+      <div class="card-body">
+        <div class="small text-muted">Current User</div>
+        <div class="fs-5 fw-semibold">{{ user.username }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card sup-card h-100">
+      <div class="card-body">
+        <div class="small text-muted">Role</div>
+        <div class="fs-5 fw-semibold">{{ user.roles | join(', ') }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card sup-card h-100">
+      <div class="card-body">
+        <div class="small text-muted">Available Servers</div>
+        <div class="fs-5 fw-semibold">{{ servers | length }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card sup-card h-100">
+      <div class="card-body">
+        <div class="small text-muted">Recent Requests</div>
+        <div class="fs-5 fw-semibold">{{ recent_entries | length }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="card sup-card h-100">
+      <div class="card-header sup-card-header">
+        <i class="bi bi-hdd-network me-2"></i>Available Servers
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for s in servers %}
+          <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+            {{ s }}
+            <span class="badge sup-badge-online">Online</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% if user.is_dba %}
+        <a href="/unlock" class="btn sup-btn-primary w-100 mt-3">
+          <i class="bi bi-unlock-fill me-1"></i>Unlock User
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="card sup-card h-100">
+      <div class="card-header sup-card-header d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-clock-history me-2"></i>Recent Audit Activity</span>
+        {% if user.is_dba %}
+        <a href="/audit" class="small">View full history &rarr;</a>
+        {% endif %}
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Requester</th>
+                <th>Server</th>
+                <th>Login</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in recent_entries %}
+              <tr>
+                <td class="small text-muted">{{ e.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ e.requester }}</td>
+                <td>{{ e.server }}</td>
+                <td><code>{{ e.login_name }}</code></td>
+                <td>
+                  {% if e.status == 'SUCCESS' %}
+                  <span class="badge text-bg-success">Success</span>
+                  {% elif e.status == 'DENIED' %}
+                  <span class="badge text-bg-warning">Denied</span>
+                  {% else %}
+                  <span class="badge text-bg-danger">Failed</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% else %}
+              <tr><td colspan="5" class="text-center text-muted py-4">No activity recorded yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function tickClock() {
+    document.getElementById('currentTime').textContent = new Date().toLocaleString();
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+</script>
+{% endblock %}
