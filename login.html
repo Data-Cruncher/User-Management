@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Sign In · Sybase ASE Unlock Portal{% endblock %}
+{% block content %}
+<div class="sup-login-wrapper">
+  <div class="sup-login-panel">
+    <div class="sup-login-side d-none d-lg-flex">
+      <div>
+        <i class="bi bi-shield-lock-fill sup-login-glyph"></i>
+        <h2 class="mt-3">Sybase ASE</h2>
+        <p class="mb-0 opacity-75">User Unlock Portal</p>
+        <hr class="opacity-25 my-4">
+        <p class="small opacity-75 mb-1"><i class="bi bi-check2-circle me-2"></i>Self-service login unlocks</p>
+        <p class="small opacity-75 mb-1"><i class="bi bi-check2-circle me-2"></i>Full audit trail</p>
+        <p class="small opacity-75 mb-0"><i class="bi bi-check2-circle me-2"></i>Role-based access control</p>
+      </div>
+    </div>
+    <div class="sup-login-form">
+      <h3 class="fw-semibold mb-1">Sign in</h3>
+      <p class="text-muted mb-4">Use your corporate directory credentials.</p>
+
+      {% if error %}
+      <div class="alert alert-danger d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <div>{{ error }}</div>
+      </div>
+      {% endif %}
+
+      <form method="post" action="/login" autocomplete="off">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" required maxlength="128" autofocus>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required maxlength="256">
+        </div>
+        <button type="submit" class="btn sup-btn-primary w-100 mt-2">
+          <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+        </button>
+      </form>
+      <p class="text-muted small mt-4 mb-0">
+        <i class="bi bi-info-circle me-1"></i>Demo accounts: <code>dba_admin / ChangeMe123!</code> or <code>viewer / ViewOnly1!</code>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

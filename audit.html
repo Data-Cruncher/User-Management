@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Audit History · Sybase ASE Unlock Portal{% endblock %}
+{% block content %}
+
+<div class="card sup-card mb-4">
+  <div class="card-header sup-card-header"><i class="bi bi-search me-2"></i>Search Audit History</div>
+  <div class="card-body">
+    <form method="get" action="/audit" class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">Requester</label>
+        <input type="text" name="requester" class="form-control" value="{{ filters.requester }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Login Name</label>
+        <input type="text" name="login_name" class="form-control" value="{{ filters.login_name }}">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Server</label>
+        <select name="server" class="form-select">
+          <option value="">All servers</option>
+          {% for s in servers %}
+          <option value="{{ s }}" {% if filters.server == s %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Status</label>
+        <select name="status_filter" class="form-select">
+          <option value="">All</option>
+          <option value="SUCCESS" {% if filters.status_filter == 'SUCCESS' %}selected{% endif %}>Success</option>
+          <option value="FAILED" {% if filters.status_filter == 'FAILED' %}selected{% endif %}>Failed</option>
+          <option value="DENIED" {% if filters.status_filter == 'DENIED' %}selected{% endif %}>Denied</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn sup-btn-primary"><i class="bi bi-search me-1"></i>Search</button>
+        <a href="/audit" class="btn sup-btn-ghost">Reset</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card sup-card">
+  <div class="card-header sup-card-header">
+    <i class="bi bi-list-ul me-2"></i>Results ({{ entries | length }})
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle">
+        <thead>
+          <tr>
+            <th>Time (UTC)</th>
+            <th>Requester</th>
+            <th>Server</th>
+            <th>Login</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Message</th>
+            <th>Time (ms)</th>
+            <th>Client IP</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in entries %}
+          <tr>
+            <td class="small text-muted text-nowrap">{{ e.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+            <td>{{ e.requester }}</td>
+            <td>{{ e.server }}</td>
+            <td><code>{{ e.login_name }}</code></td>
+            <td class="small">{{ e.reason }}</td>
+            <td>
+              {% if e.status == 'SUCCESS' %}
+              <span class="badge text-bg-success">Success</span>
+              {% elif e.status == 'DENIED' %}
+              <span class="badge text-bg-warning">Denied</span>
+              {% else %}
+              <span class="badge text-bg-danger">Failed</span>
+              {% endif %}
+            </td>
+            <td class="small text-muted">{{ e.message }}</td>
+            <td class="small">{{ "%.1f"|format(e.execution_time_ms) }}</td>
+            <td class="small text-muted">{{ e.client_ip }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="9" class="text-center text-muted py-4">No matching audit records found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
